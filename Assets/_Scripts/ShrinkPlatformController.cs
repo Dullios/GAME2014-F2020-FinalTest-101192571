@@ -7,16 +7,28 @@ public class ShrinkPlatformController : MonoBehaviour
     private Animator anim;
     public bool canGrow;
 
+    [Header("Hover Details")]
+    public Transform startPos;
+    public Transform endPos;
+    private Vector3 distance;
+    public float hoverTimer;
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         canGrow = true;
+
+        distance = endPos.position - startPos.position;
     }
 
     private void Update()
     {
-        
+        hoverTimer += Time.deltaTime * 0.5f;
+
+        var distanceY = (distance.y > 0) ? startPos.position.y + Mathf.PingPong(hoverTimer, distance.y) : startPos.position.y;
+
+        transform.position = new Vector3(transform.position.x, distanceY, 0.0f);
     }
 
     private void OnCollisionExit2D(Collision2D collision)

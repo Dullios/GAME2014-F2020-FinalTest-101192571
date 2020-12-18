@@ -2,10 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * File: 
+ *      ShrinkPlatformController.cs
+ * Name: 
+ *      Russell Brabers
+ * StudentID: 
+ *      101192571
+ * Date Modified:
+ *      December 18, 2020
+ * Description:
+ *      A script to control a platform that hovers, shrinks, and grows
+ * Revision History:
+ *      - Initial creation
+ *      - Added animator modifying functions
+ *      - Added collision logic
+ *      - Added hover variables and functionality to the Update method
+ *      - Added AudioSource and sound effect
+ */
+
 public class ShrinkPlatformController : MonoBehaviour
 {
     private Animator anim;
-    public bool canGrow;
+    private AudioSource sfx;
+    public bool canShrink; // Boolean to check if the animation can start
 
     [Header("Hover Details")]
     public Transform startPos;
@@ -17,11 +37,13 @@ public class ShrinkPlatformController : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        canGrow = true;
+        sfx = GetComponent<AudioSource>();
+        canShrink = true;
 
         distance = endPos.position - startPos.position;
     }
 
+    // Use Mathf.PingPong to create a hovering effect
     private void Update()
     {
         hoverTimer += Time.deltaTime * 0.5f;
@@ -41,10 +63,11 @@ public class ShrinkPlatformController : MonoBehaviour
 
     public void TriggerShrink()
     {
-        if (canGrow)
+        if (canShrink)
         {
             anim.SetTrigger("isShrinking");
-            canGrow = false;
+            sfx.Play();
+            canShrink = false;
         }
     }
 
@@ -66,6 +89,6 @@ public class ShrinkPlatformController : MonoBehaviour
     public void TriggerIdle()
     {
         anim.SetTrigger("isIdle");
-        canGrow = true;
+        canShrink = true;
     }
 }
